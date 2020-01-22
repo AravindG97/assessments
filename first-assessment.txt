@@ -1,0 +1,240 @@
+1.String reverse
+
+a="accenture"
+print(a[::-1])
+
+     OR
+a="accenture"
+b=""
+for x in range(len(a)-1,-1,-1):
+  b=b+a[x]
+print(b)
+
+
+2.Swap case 
+
+case="AcCeNtUrE"
+print(case.swapcase())
+case1=""
+for x in case:
+  if x.isupper():
+    case1=case1+x.lower()
+  else:
+    case1=case1+x.upper()
+print(case1)
+
+3.Count occurance,print in dict
+
+a="accenture"
+dic={}
+for x in a:
+  dic[x]=a.count(x)
+print(dic)
+
+
+4.Even Odd
+
+lis=[]
+for x in range(1,51):
+  lis.append(x)
+even=[]
+odd=[]
+for x in lis:
+  if(x%2==0):
+    even.append(x)
+  else:
+    odd.append(x)
+print("even list"+str(even))
+print("odd list"+str(odd))
+
+
+5.DIVISIBLE
+
+lis=[]
+for x in range(1,51):
+  lis.append(x)
+for x in range(0,len(lis)):
+  if(lis[x]%5==0 and lis[x]%3==0):
+    lis[x]="fizz-buzz"
+  elif(lis[x]%3==0):
+    lis[x]="fizz"
+  elif(lis[x]%5==0):
+    lis[x]="buzz"
+print(lis)
+
+
+6.vovels 
+
+a="accenture"
+b="aeiou"
+Count=0
+temp=""
+for x in b:
+  count=a.count(x)
+  if(count>0):
+    temp=temp+str(count)+x
+print(temp)
+
+
+7.digit sum,char sum 
+
+a="qwe12as"
+sum=0
+ch=""
+for x in a:
+  if x.isdigit():
+    sum=sum+int(x)
+  else:
+    ch=ch+x
+print("int sum is "+str(sum)+"\n"+" the concat is: "+ch+"\n"+" the len of concat is: "+str(len(ch)))
+
+8.sum is 9 
+
+a=[]
+b=[]
+for x in range(1,11):
+  a.append(x)
+for x in a:
+  for y in a:
+    if((x+y)==9): 
+      b.append([x,y])
+print(b)
+
+9.Anagram
+
+a="aasd"
+b="asda"
+aa=list(a)
+bb=list(b)
+aa.sort()
+bb.sort()
+if(aa==bb):
+  print("both constitue an anagram")
+else:
+  print("not anagram")
+  
+10.PrimeNo
+
+a=24
+for x in range(2,int(a/2)):
+  if(a%x==0):
+    print("its not palindrome,the divisor is"+str(x))
+    break
+  else:
+    print("its prime")
+
+
+11.tuple
+
+tup=(1,2,3,4,5)
+lis=list(tup)
+lis.append("a")
+tup=tuple(lis)
+print(tup)
+
+
+
+
+
+12.palindrome
+	
+pal=input("enter the string: ")
+rev=pal[::-1]
+if(pal==rev):
+  print("its palindrome")
+else:
+  print("not palindrome")
+
+
+13.multiplication table
+
+val=int(input("enter the req table val: "))
+for x in range(1,11):
+  print(str(x)+"*"+str(val)+"="+str(x*val))
+
+
+14.fibonacci
+
+i,a,b,op=0,0,1,0
+while(op<50):
+  if(i<=1):
+    op=i
+  else:
+    op=a+b
+    a=b
+    b=op
+  if(op<50):
+    print(op)
+  i=i+1
+
+
+
+
+15.hyphen seperated
+
+hypsep=input("enter the string")
+a=hypsep.split("-")
+a.sort()
+print('-'.join(a))
+
+
+16.UNIQUE
+
+a=[1,2,3,3,3,3,4,5]
+b=[]
+for x in a:
+  if x not in b:
+    b.append(x)
+print(b)
+
+			or
+a=[1,2,3,3,3,3,4,5]
+b=[]
+for x in a:
+  if x in b:
+    continue
+  else:
+    b.append(x)
+print(b)
+
+
+17.pangram
+
+a="abcdefghijklmnopqrstuvwxyz"
+pan="The quick brown fox jumps over the lazy dog"
+for x in a:
+  if(x not in pan):
+    print("its  not pangram")
+    break;
+else:
+  print("its panagram")
+    
+
+
+18.biggest ODD
+
+a,b=[],[]
+for x in range(1,6):
+  a.append(int(input("enter")))
+for x in a:
+  if(x%2!=0):
+    b.append(x)
+b.sort()
+print(b[-1])
+
+
+19.area
+
+import math
+radius=int(input("enter the radius"))
+print("the area is"+str(math.pi*radius*radius))
+
+20.factorial
+
+num=int(input("enter the no"))
+fac=1
+for x in range(1,num+1):
+  fac=fac*x
+print(fac)
+
+

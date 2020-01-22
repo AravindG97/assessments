@@ -1,0 +1,26 @@
+1.Reverse the string
+2.Swap the cases for a string "AcCeNtUrE"
+3.Input is "accenture", count the occurances of each character and print the output in dictionary like {key:val} key - letter , val - count.
+4.You have to generate a list of  numbers from 1 to 50 and then separate the list into odd_list and even_list.
+5.You have a list from 1 to 50 print the numbers if it is divisible by 3 print "fizz", if it is divisible by 5 print "buzz", if it is divisible by 3 and 5 print "fizz-buzz".
+6.In a string "accenture", Print the count of vowels in a string like "1a2e1u"
+7.In a string "ga24nbv2k6jg523jg2545lsfwe" print the sum of digits in the string and characters separately.
+8.You have to generate a list of  numbers from 1 to 10, and then print the pair of numbers whose sum is 9.
+9.Find anagram for two given string ex. add, dad --> anagram
+10.Check whether a number is Prime or not. If prime display it as prime .if not prime find its prime divisor
+11.Create a tuple which have a numbers from 1 to 5, then add a character "a" to that tuple.
+12.Check whether the given string is Palindrome or not and get the input from user.
+13.Write program to print multiplication table.
+14.Print the Fibonacci series up to 50
+15.Write a Python program that accepts a hyphen-separated sequence of words as input and prints the words in a hyphen-separated sequence after sorting them alphabetically. 
+Sample Items : green-red-yellow-black-white
+Expected Result : black-green-red-white-yellow
+16.Write a Python function that takes a list and returns a new list with unique elements of the first list. Without using set
+Sample List : [1,2,3,3,3,3,4,5]
+Unique List : [1, 2, 3, 4, 5]
+17.Write a Python function to check whether a string is a pangram or not. 
+Note : Pangrams are words or sentences containing every letter of the alphabet at least once.
+For example : "The quick brown fox jumps over the lazy dog"
+18.Write a program that asks the user to input 5 integers, and then prints the largest odd number that was entered. If no odd number was entered, it should print a message to that effect.
+19.Write a Python program which accepts the radius of a circle from the user and compute the area.
+20.Find the factorial of the given number.

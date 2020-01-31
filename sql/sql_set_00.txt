@@ -1,0 +1,293 @@
+1.
+mysql> select name from employee order by salary desc limit 3;
++---------------+
+| name          |
++---------------+
+| TARA CUMMINGS |
+| PAUL VINCENT  |
+| ADAM WAYNE    |
++---------------+
+3 rows in set (0.00 sec)
+
+
+mysql> select name from(select name,rank() over(order by salary desc)as rank_sal from employee) as desc_sal where rank_sal between 1 and 3;
++---------------+
+| name          |
++---------------+
+| TARA CUMMINGS |
+| PAUL VINCENT  |
+| ADAM WAYNE    |
++---------------+
+3 rows in set (0.00 sec)
+
+
+2.
+mysql> select name from employee order by salary limit 1;
++-------------+
+| name        |
++-------------+
+| JOHN HELLEN |
++-------------+
+1 row in set (0.00 sec)
+
+
+mysql> select name from(select name,dense_rank() over(order by salary)as rank_sal from employee) as sal where rank_sal=1;
++-------------+
+| name        |
++-------------+
+| JOHN HELLEN |
++-------------+
+1 row in set (0.00 sec)
+
+3.
+mysql> select name from employee where manager_id is null;
+Empty set (0.00 sec)
+
+4.
+mysql> select name from employee join dept on employee.dep_id=dept.dep_id where name=dep_manager;
++-----------------+
+| name            |
++-----------------+
+| BRUCE WILLS     |
+| TIM ARCHER      |
+| ADAM JUSTIN     |
+| ROBERT SWIFT    |
+| NATASHA STEVENS |
++-----------------+
+5 rows in set (0.00 sec)
+
+5.
+mysql> select name from employee join dept on employee.dep_id=dept.dep_id where name=dep_manager order by salary limit 1;
++--------------+
+| name         |
++--------------+
+| ROBERT SWIFT |
++--------------+
+1 row in set (0.00 sec)
+
+
+mysql> select name from(select name,dense_rank() over(order by salary)as rank_sal from employee join dept on employee.dep_id=dept.dep_id where name=dep_manager) as emp where rank_sal =1;
++--------------+
+| name         |
++--------------+
+| ROBERT SWIFT |
++--------------+
+1 row in set (0.00 sec)
+
+
+
+6.
+mysql> select count(*) as total_no_of_employees from employee e join dept a on e.dep_id=a.dep_id where a.dep_name="communications";
++-----------------------+
+| total_no_of_employees |
++-----------------------+
+|                     6 |
++-----------------------+
+1 row in set (0.00 sec)
+
+7.
+mysql> select name from employee e join dept a on e.dep_id=a.dep_id where a.dep_name="finance" order by salary desc limit 1;
++------------+
+| name       |
++------------+
+| ADAM WAYNE |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select name from(select name,dense_rank() over(order by salary desc)as rank_sal from employee join dept on employee.dep_id=dept.dep_id where dep_name="finance") as emp where rank_sal =1;
++------------+
+| name       |
++------------+
+| ADAM WAYNE |
++------------+
+1 row in set (0.00 sec)
+
+8.
+mysql> select name from employee e join dept a on e.dep_id=a.dep_id where a.dep_name="product" order by salary  limit 1;
++-------------+
+| name        |
++-------------+
+| NICK MARTIN |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select name from(select name,dense_rank() over(order by salary)as rank_sal from employee join dept on employee.dep_id=dept.dep_id where dep_name="product") as emp where rank_sal =1;
++-------------+
+| name        |
++-------------+
+| NICK MARTIN |
++-------------+
+1 row in set (0.00 sec)
+
+
+
+9.
+mysql> select count(salary) as employee_count,salary as max_salary_of_healthdept from employee where salary=(select max(salary) from employee e join dept a on e.dep_id=a.dep_id where dep_name="health");
++----------------+--------------------------+
+| employee_count | max_salary_of_healthdept |
++----------------+--------------------------+
+|              1 |                    94791 |
++----------------+--------------------------+
+1 row in set (0.00 sec)
+
+mysql> select count(*) as count,salary from(select salary,dense_rank() over(order by salary desc) as rank_sal from employee join dept on employee.dep_id=dept.dep_id where dep_name="health")as emp where rank_sal=1;
++-------+--------+
+| count | salary |
++-------+--------+
+|     1 |  94791 |
++-------+--------+
+1 row in set (0.00 sec)
+
+
+10.
+mysql> select name from employee e join dept d on e.dep_id=d.dep_id where dep_manager="natasha stevens" and name!="natasha stevens";
++----------------+
+| name           |
++----------------+
+| ADAM WAYNE     |
+| JOSEPH ANGELIN |
++----------------+
+2 rows in set (0.00 sec)
+
+
+11.
+mysql> select name,count(*) as emp_count,dep_name,dep_manager from employee e join dept d on e.dep_id=d.dep_id where dep_name="health" group by name;
++----------------+-----------+----------+-------------+
+| name           | emp_count | dep_name | dep_manager |
++----------------+-----------+----------+-------------+
+| martin tredeau |         1 | HEALTH   | TIM ARCHER  |
+| PAUL VINCENT   |         1 | HEALTH   | TIM ARCHER  |
+| TIM ARCHER     |         1 | HEALTH   | TIM ARCHER  |
+| BRED MICHAEL   |         1 | HEALTH   | TIM ARCHER  |
+| EDWARD CANE    |         1 | HEALTH   | TIM ARCHER  |
+| JOHN HELLEN    |         1 | HEALTH   | TIM ARCHER  |
++----------------+-----------+----------+-------------+
+6 rows in set (0.00 sec)
+
+12.
+mysql> select  e.dep_id,e_id,manager_id from employee e join dept d on e.dep_id=d.dep_id where dep_name="communications";
++--------+------+------------+
+| dep_id | e_id | manager_id |
++--------+------+------------+
+| d02    | A116 | A187       |
+| D02    | A198 | A187       |
+| D02    | A187 | A298       |
+| D02    | A121 | A187       |
+| D02    | A194 | A187       |
+| D02    | A133 | A187       |
++--------+------+------------+
+6 rows in set (0.00 sec)
+
+13.
+mysql> select avg(salary),e.dep_id,dep_name from employee e join dept d on e.dep_id=d.dep_id group by dep_name;
++-------------+--------+----------------+
+| avg(salary) | dep_id | dep_name       |
++-------------+--------+----------------+
+|  54527.6667 | D01    | HEALTH         |
+|  48271.3333 | d02    | COMMUNICATIONS |
+|  58517.5000 | d03    | PRODUCT        |
+|  51913.3333 | D04    | INSURANCE      |
+|  56660.3333 | D05    | FINANCE        |
++-------------+--------+----------------+
+5 rows in set (0.00 sec)
+
+
+14.
+mysql> select sum(salary) as total_amount_spent from employee e join dept d on e.dep_id=d.dep_id where dep_name="FINANCE";
++--------------------+
+| total_amount_spent |
++--------------------+
+|             169981 |
++--------------------+
+1 row in set (0.00 sec)
+
+15.
+mysql> select sum(salary) as total_amount_spent,e.dep_id,dep_manager from employee e join dept d on e.dep_id=d.dep_id group by dep_name order by total_amount_spent limit 1;
++--------------------+--------+-------------+
+| total_amount_spent | dep_id | dep_manager |
++--------------------+--------+-------------+
+|             117035 | d03    | BRUCE WILLS |
++--------------------+--------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select dep_id,dep_manager,total_amount_spent from(select employee.dep_id,dep_manager,salary, sum(salary) as total_amount_spent,dense_rank() over(order by sum(salary))as emp_sal from employee join dept on employee.dep_id=dept.dep_id group by dep_manager)as temp where emp_sal=1;
++--------+-------------+--------------------+
+| dep_id | dep_manager | total_amount_spent |
++--------+-------------+--------------------+
+| d03    | BRUCE WILLS |             117035 |
++--------+-------------+--------------------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+
+
+16.
+mysql> select count(*) as Emp_count,dep_name from employee e join dept d on e.dep_id=d.dep_id group by dep_name;
++-----------+----------------+
+| Emp_count | dep_name       |
++-----------+----------------+
+|         6 | HEALTH         |
+|         6 | COMMUNICATIONS |
+|         2 | PRODUCT        |
+|         3 | INSURANCE      |
+|         3 | FINANCE        |
++-----------+----------------+
+5 rows in set (0.00 sec)
+
+17.
+
+mysql> select count(*) as emp_count,dep_name from employee e join dept d on e.dep_id=d.dep_id where salary<10000;
++-----------+----------+
+| emp_count | dep_name |
++-----------+----------+
+|         0 | NULL     |
++-----------+----------+
+1 row in set (0.00 sec)
+
+
+mysql> select count(*) as emp_count,dep_name from employee e join dept d on e.dep_id=d.dep_id where salary<20000 group by dep_name;
++-----------+----------------+
+| emp_count | dep_name       |
++-----------+----------------+
+|         1 | COMMUNICATIONS |
+|         1 | HEALTH         |
++-----------+----------------+
+2 rows in set (0.00 sec)
+
+
+18.
+mysql> select count(*) as emp_count,dep_name from employee e join dept d on e.dep_id=d.dep_id where d.dep_id="d04";
++-----------+-----------+
+| emp_count | dep_name  |
++-----------+-----------+
+|         3 | INSURANCE |
++-----------+-----------+
+1 row in set (0.00 sec)
+
+
+
+19.
+mysql> select dep_name,dep_id,dep_manager,emp_count from ( select dep_name,dep_manager,d.dep_id,count(*)as emp_count,dense_rank() over(order by count(*) desc)as count_rank from employee e join dept d on e.dep_id=d.dep_id group by dep_name)as temp where count_rank=1;
++----------------+--------+-------------+-----------+
+| dep_name       | dep_id | dep_manager | emp_count |
++----------------+--------+-------------+-----------+
+| HEALTH         | D01    | TIM ARCHER  |         6 |
+| COMMUNICATIONS | D02    | ADAM JUSTIN |         6 |
++----------------+--------+-------------+-----------+
+2 rows in set (0.00 sec)
+
+
+20.
+mysql> select name from employee join dept on employee.dep_id=dept.dep_id where dep_manager="tim archer" and name!="tim archer";
++----------------+
+| name           |
++----------------+
+| martin tredeau |
+| PAUL VINCENT   |
+| BRED MICHAEL   |
+| EDWARD CANE    |
+| JOHN HELLEN    |
++----------------+
+5 rows in set (0.00 sec)

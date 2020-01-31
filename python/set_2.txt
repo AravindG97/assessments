@@ -1,0 +1,112 @@
+1.
+n1=int(input("enter no1: "))
+n2=int(input("enter no2: "))
+remainder=n1%n2
+while(remainder!=0):
+    n1=n2
+    n2=remainder
+    remainder=n1%n2
+print("the gcd is "+str(n2))
+2.
+def power(a,b):
+    while(a%b==0):
+        if(a==b):
+            return "true"
+        a=a/b
+    else:
+        return "false"
+print(power(64,4))
+print(power(30,2))
+        
+3.
+def factI(a):
+  sum=1
+  for x in range(1,a+1):
+    sum=sum*x
+  return sum
+def factR(n):
+  if n == 0:
+    return 1
+  else:
+    return n * factR(n-1)
+print(factI(5))
+print(factR(5))
+
+4.
+a=1111
+b=len(str(a))
+c=0
+print(b)
+for i in str(a):
+  c+=((int(i))*(2**(b-1)))
+  b=b-1
+
+print(c)
+
+
+
+5.
+
+b=0
+c=[]
+def intcount(a):
+  try:
+    for x in a:
+      if x.isdigit():
+        b+=int(x)
+        c.append(x)
+    if len(c)==0:
+      raise TypeError("Only integers are allowed")
+  except TypeError:
+   print("error")
+intcount("eccenture")
+
+
+6.
+b=[3,5,7,9,2]
+c=[]
+def firsteven(a):
+  try:
+    for x in a:
+      if(x%2==0):
+        c.append(x)
+        return(c[0])
+    else:
+      raise TypeError("no even")
+  except TypeError:
+    print("no even nos found")
+print(firsteven(b))
+
+7.
+b=[]
+def ispalindrome(a):
+  for x in a:
+    if x.isalpha():
+      b.append(str(x).lower())
+  if(b==b[::-1]):
+    print("palindrome")
+  else:
+    print("nopalindrome")
+ispalindrome("m, oM")
+
+8.
+	flag=True
+def evalloop():
+  while(flag):
+    a=input("enter:")
+    if(a!="done"):
+      print(eval(a))
+    else:
+      break
+evalloop()
+
+
+9.a
+
+def newton(a):
+  x=a-1
+  for i in range(500):
+    y=(x + a/x)*0.5
+    x=y
+  print(x)
+newton(int(input(("enter the no: "))))

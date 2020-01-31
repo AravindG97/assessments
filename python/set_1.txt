@@ -1,0 +1,101 @@
+1.
+x=85
+y=23325
+z=13
+a=[x,y,z]
+a.sort(reverse=True)
+for x in a:
+  if(x%2!=0):
+    print(x)
+    break
+else:
+  print("invalid ip")
+
+2.
+def right_justify(a):
+  print(a.rjust(70))
+right_justify("cigna")
+
+
+
+3.
+odd=[]
+for x in range(1,11):
+  b=(int(input("enter number "+str(x)+" ")))
+  if(b%2!=0):
+    odd.append(b)
+if(len(odd)==0):
+  print("invalid input")
+else:
+  odd.sort()
+  print(odd[-1])
+
+4.
+import math
+r=int(input("enter the radius: "))
+print("the volume is: "+str((4*math.pi*r*r*r)/3))
+
+price=24.96
+actual_price=price*0.6*60
+ship_cost=0
+for x in range(1,61):
+  if x==1:
+    ship_cost+=3
+  else:
+    ship_cost+=0.75
+total_cost=actual_price+ship_cost
+print("the total cost is: "+str(total_cost))
+
+
+departing_time=(6+52/60)
+easy_pace=2
+easy_pace_speed=(8+15/60)/60
+easy_pace_time=easy_pace*easy_pace_speed
+tempo_pace=3
+tempo_pace_speed=(7+12/60)/60
+tempo_pace_time=tempo_pace*tempo_pace_speed
+arriving_time=departing_time+easy_pace_time+tempo_pace_time
+minutes=(arriving_time/10)*60
+print(str(int(arriving_time))+":"+str(int(minutes)))
+
+5.
+x=int(input("enter  the no: "))
+for i in range(1,x):
+  for j in range(1,7):
+    if(i**j)==x:
+      print("root**power: "+str(i)+"**"+str(j))
+    else:
+      print("no such pairs exist")
+6.
+	a="1.23,2.44,4.55,2.567"
+b=a.split(",")
+sum=0
+for x in b:
+  sum+=float(x)
+print("%.2f"%sum)
+
+7.
+def isln(a,b):
+  if (a in b) or (b in a):
+    print("true")
+  else:
+    print("false")
+isln(input("enter first: "),input("enter second: "))
+
+8.
+x=[12,44,66,40]
+y=[4,11,0,10]
+c=[]
+def getratios(a,b):
+  if(len(a)==len(b)):
+    for i in range(len(a)):
+      try:
+        c.append(a[i]/b[i])
+      except:
+        c.append("divide by zero error")
+  else:
+    print("invalid lists")
+getratios(x,y)
+print(c)
+
+

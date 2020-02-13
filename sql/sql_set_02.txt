@@ -112,3 +112,35 @@ mysql> select pp.plantfk,name,(sum(amount)/sum(seeds))as total from plant ppp jo
 |       4 | Radish | 0.7667 |
 +---------+--------+--------+
 4 rows in set (0.00 sec)
+
+8.
+
+mysql> select g.name,p.name,date1,amount from gardener g join plant p join picked pp on g.gardener_id=pp.gardenerfk and p.plant_id=pp.plantfk where g.name="tim" and amount>20;
++------+--------+------------+--------+
+| name | name   | date1      | amount |
++------+--------+------------+--------+
+| Tim  | Carrot | 2012-08-18 |     28 |
+| Tim  | Radish | 2012-07-16 |     23 |
++------+--------+------------+--------+
+2 rows in set (0.00 sec)
+
+9.
+mysql> select name from gardener g join picked p join planted pp on g.gardener_id=p.gardenerfk and g.gardener_id=pp.gardenerfk where pp.locationfk=p.locationfk group by name;
++--------+
+| name   |
++--------+
+| Tim    |
+| Father |
++--------+
+2 rows in set (0.00 sec)
+
+10.
+mysql> select p.name from plant p join location l join picked pp on p.plant_id=pp.plantfk and pp.locationfk=l.location_id where monthname(date1)="august" and l.name<>"west" group by name;
++--------+
+| name   |
++--------+
+| Carrot |
+| Tomato |
+| Corn   |
++--------+
+3 rows in set (0.00 sec)

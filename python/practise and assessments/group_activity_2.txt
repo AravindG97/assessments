@@ -1,0 +1,4 @@
+sejal 21 localite sejal21@xyz.com
+jon 22 hostel jon22@abc.in
+jaspreeth 23 localite jaspreeth23@qwe.in
+akash 20 hostel akash20@gmail.com

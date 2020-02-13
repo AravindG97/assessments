@@ -26,7 +26,7 @@ try:
     # obj3=Student()
     obj3=[]
     # obj=['obj1','obj2','obj3']
-    f = open("C:\\Users\\akshatha.a.suresh\\PycharmProjects\\practice\\reading_file", "r")
+    f = open(r"C:\Users\aravind.gnanasekar\Downloads\group_activity_2.txt", "r")
     l=f.read().splitlines()
     print(l)
     for i in l:

@@ -1,0 +1,144 @@
+
+1.
+mysql> select name from highschooler h join friend on h.id=friend.id1 where id2 in (select id from highschooler where name="gabriel");
++-----------+
+| name      |
++-----------+
+| Cassandra |
+| Andrew    |
+| Alexis    |
+| Jessica   |
+| Jordan    |
++-----------+
+5 rows in set (0.00 sec)
+
+2.
+mysql> select * from likes where id1 in(select id from highschooler where grade=12) and id2 in(select id from highschooler where grade=9);
+Empty set (0.00 sec)
+
+mysql> select * from likes where id1 in(select id from highschooler where grade=11) and id2 in(select id from highschooler where grade=9);
+Empty set (0.00 sec)
+
+mysql> select * from likes where id1 in(select id from highschooler where grade=12) and id2 in(select id from highschooler where grade=10);
++------+------+
+| ID1  | ID2  |
++------+------+
+| 1025 | 1101 |
++------+------+
+1 row in set (0.00 sec)
+
+3.
+ysql> select temp1.id,temp1.name,temp1.grade,temp2.id,temp2.name,temp2.grade from((select * from highschooler h join
+ (select a.id1,a.id2 from likes a join likes b on a.id1=b.id2 and a.id2=b.id1)as temp on h.id=temp.id1 or h.id=temp.id2)as
+ temp1 join (select * from highschooler h join (select a.id1,a.id2 from likes a join likes b on a.id1=b.id2 and a.id2=b.id1)as
+ temp on h.id=temp.id1 or h.id=temp.id2)as temp2 on temp1.id1=temp2.id1) where temp1.id<>temp2.id and temp1.name>temp2.name group by temp1.name ;
++------+---------+-------+------+-----------+-------+
+| ID   | name    | grade | ID   | name      | grade |
++------+---------+-------+------+-----------+-------+
+| 1689 | Gabriel |     9 | 1709 | Cassandra |     9 |
+| 1934 | Kyle    |    12 | 1501 | Jessica   |    11 |
++------+---------+-------+------+-----------+-------+
+2 rows in set (0.00 sec)
+
+4.
+mysql> select * from highschooler where id not in(select id1 from likes) and id not in(select id2 from likes) order by grade,name;
++------+---------+-------+
+| ID   | name    | grade |
++------+---------+-------+
+| 1510 | Jordan  |     9 |
+| 1381 | Tiffany |     9 |
+| 1661 | Logan   |    12 |
++------+---------+-------+
+3 rows in set (0.00 sec)
+
+5.
+mysql> select * from highschooler where id in(select id2 from likes where id2 not in (select id1 from likes)) order by grade desc,name ;
++------+--------+-------+
+| ID   | name   | grade |
++------+--------+-------+
+| 1304 | Jordan |    12 |
+| 1101 | Haley  |    10 |
+| 1468 | Kris   |    10 |
++------+--------+-------+
+3 rows in set (0.00 sec)
+
+6.
+ select temp1.id,temp1.name,temp1.grade,temp2.id2,temp2.name,temp2.grade from (select ff.id1,ff.id2,hh.id,hh.name,hh.grade from friend ff  
+ join highschooler hh on ff.id1=hh.id)as temp1 join (select f.id1,f.id2,h.id,h.name,h.grade from friend f  join highschooler h on f.id1=h.id)as 
+ temp2 on temp1.id1=temp2.id2 group by temp1.id1 having temp1.grade=temp2.grade;
++------+-----------+-------+------+-----------+-------+
+| id   | name      | grade | id2  | name      | grade |
++------+-----------+-------+------+-----------+-------+
+| 1510 | Jordan    |     9 | 1510 | Gabriel   |     9 |
+| 1689 | Gabriel   |     9 | 1689 | Cassandra |     9 |
+| 1709 | Cassandra |     9 | 1709 | Gabriel   |     9 |
+| 1468 | Kris      |    10 | 1468 | Haley     |    10 |
+| 1101 | Haley     |    10 | 1101 | Kris      |    10 |
+| 1911 | Gabriel   |    11 | 1911 | Alexis    |    11 |
+| 1501 | Jessica   |    11 | 1501 | Alexis    |    11 |
+| 1661 | Logan     |    12 | 1661 | Jordan    |    12 |
+| 1641 | Brittany  |    10 | 1641 | Haley     |    10 |
+| 1025 | John      |    12 | 1025 | Logan     |    12 |
++------+-----------+-------+------+-----------+-------+
+10 rows in set (0.00 sec)
+
+7.
+
+
+8.
+
+mysql> select (count(*)-count(distinct(name)))as Difference from highschooler;
++------------+
+| Difference |
++------------+
+|          2 |
++------------+
+1 row in set (0.00 sec)
+
+9.
+mysql> select name,grade from highschooler where id in(select id2 from likes group by id2 having count(*)>1);
++-----------+-------+
+| name      | grade |
++-----------+-------+
+| Cassandra |     9 |
+| Kris      |    10 |
++-----------+-------+
+2 rows in set (0.00 sec)
+
+11.
+mysql> select temp1.id,temp1.name,temp1.grade,temp2.id2,temp2.name,temp2.grade from (select ff.id1,ff.id2,hh.id,hh.name,hh.grade from friend ff
+      join highschooler hh on ff.id1=hh.id)as temp1 join (select f.id1,f.id2,h.id,h.name,h.grade from friend f  join highschooler h on f.id1=h.id)as
+      temp2 on temp1.id1=temp2.id2 group by temp1.id1 having temp1.grade<>temp2.grade;
++------+---------+-------+------+---------+-------+
+| id   | name    | grade | id2  | name    | grade |
++------+---------+-------+------+---------+-------+
+| 1381 | Tiffany |     9 | 1381 | Alexis  |    11 |
+| 1782 | Andrew  |    10 | 1782 | Gabriel |     9 |
+| 1247 | Alexis  |    11 | 1247 | Tiffany |     9 |
+| 1316 | Austin  |    11 | 1316 | Andrew  |    10 |
+| 1934 | Kyle    |    12 | 1934 | Austin  |    11 |
+| 1304 | Jordan  |    12 | 1304 | Andrew  |    10 |
++------+---------+-------+------+---------+-------+
+6 rows in set (0.00 sec)
+
+12.
+mysql> select(avg(cnt))as average from (select id1,count(id2)as cnt from friend group by id1)as temp1;
++---------+
+| average |
++---------+
+|  2.5000 |
++---------+
+1 row in set (0.00 sec)
+
+13.
+
+14.
+mysql> select name,grade from (select name,grade,id1,count(id2)as cnt,dense_rank()over(order by count(id2)desc)as rankk from friend f join highschooler h on f.id1=h.id group by id1)as temp where rankk=1;
++--------+-------+
+| name   | grade |
++--------+-------+
+| Andrew |    10 |
+| Alexis |    11 |
++--------+-------+
+2 rows in set (0.00 sec)
+

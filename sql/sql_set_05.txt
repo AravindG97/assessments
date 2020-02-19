@@ -1,0 +1,196 @@
+
+
+1.
+mysql> select m_name as organiser from musician m join concert c on c.concert_organiser=m.m_no
+    -> where concert_venue="assembly rooms" and con_date>"1997-02-01";
++---------------+
+| organiser     |
++---------------+
+| James Steeple |
++---------------+
+1 row in set (0.00 sec)
+
+2.
+mysql> select m_name as performer from performer p join musician m join place pp on p.perf_is=m.m_no and m.born_in=pp.place_no where instrument in("guitar","violin") and place_country="england";
++------------------+
+| performer        |
++------------------+
+| Harry Forte      |
+| Davis Heavan     |
+| Alan Fluff       |
+| Theo Mengel      |
+| James First      |
+| Harriet Smithson |
++------------------+
+6 rows in set (0.00 sec)
+
+3.
+mysql> select m_name as organiser,place_town,con_date from concert c join place p join musician m on c.cocert_in=p.place_no and c.concert_organiser=m.m_no where place_country="usa";
++---------------+------------+------------+
+| organiser     | place_town | con_date   |
++---------------+------------+------------+
+| James Steeple | New York   | 1997-06-15 |
++---------------+------------+------------+
+1 row in set (0.00 sec)
+
+4.
+mysql> select con_date,place_town,c_title from band b join performance p join concert c join composition cc join place on b.band_no =p.gave and p.performed_in =c.concert_no and p.performed=cc.c_no and c.cocert_in=place.place_no where performed=(select cmpn_no from musician m join composer c join composed cc join composition on m.m_no=c.comp_is and c.comp_no=cc.cmpr_no and cc.cmpr_no=composition.c_no where m_name="andy jones");
++------------+------------+----------------+
+| con_date   | place_town | c_title        |
++------------+------------+----------------+
+| 1997-06-15 | New York   | A Simple Piece |
++------------+------------+----------------+
+1 row in set (0.00 sec)
+
+5.
+mysql> select instrument,avg(cnt)as average from(select distinct(instrument),count(*)as cnt from performer group by instrument)as temp group by instrument;
++------------+---------+
+| instrument | average |
++------------+---------+
+| violin     |  7.0000 |
+| viola      |  4.0000 |
+| banjo      |  1.0000 |
+| guitar     |  2.0000 |
+| trumpet    |  1.0000 |
+| bass       |  3.0000 |
+| flute      |  2.0000 |
+| cornet     |  1.0000 |
+| drums      |  2.0000 |
+| cello      |  3.0000 |
+| trombone   |  1.0000 |
+| horn       |  1.0000 |
+| clarinet   |  1.0000 |
++------------+---------+
+13 rows in set (0.01 sec)
+
+
+6.
+mysql> select distinct(m_name) as name,born as DOB,instrument from musician m join performer p on m.m_no=p.perf_is where died is null and instrument in(select instrument from musician m join performer p on m.m_no=p.perf_is where m_name like '%theo%');
++-------------+------------+------------+
+| name        | DOB        | instrument |
++-------------+------------+------------+
+| Theo Mengel | 1948-08-12 | banjo      |
+| John Smith  | 1950-03-03 | violin     |
+| Harry Forte | 1951-02-28 | violin     |
+| Theo Mengel | 1948-08-12 | violin     |
+| Jeff Dawn   | 1945-12-12 | violin     |
+| James First | 1965-06-10 | violin     |
+| Harry Forte | 1951-02-28 | drums      |
+| Theo Mengel | 1948-08-12 | drums      |
++-------------+------------+------------+
+8 rows in set (0.00 sec)
+
+7.
+mysql> select band_id,count(*)as cnt,band_name from play_in p join band b on p.band_id=b.band_no group by band_id having cnt> (select avg(cntt) from (select count(*) as cntt from play_in group by band_id)as temp2);
++---------+-----+-----------+
+| band_id | cnt | band_name |
++---------+-----+-----------+
+|       1 |   7 | ROP       |
+|       7 |   6 | Oh well   |
+|       2 |   7 | AASO      |
++---------+-----+-----------+
+3 rows in set (0.02 sec)
+
+
+8.
+
+
+mysql> select m_name as name from concert c join musician m join composer cc join composed ccc join composition cccc on c.concert_organiser=m.m_no
+and c.concert_organiser=cc.comp_is and cc.comp_no=ccc.cmpr_no and ccc.cmpn_no=cccc.c_no where cocert_in in (select place_no from place where 
+place_country in("england","scotland")) and living_in in (select place_no from place where place_country in("england","scotland")) and c_in in (select place_no from place 
+where place_country in ("england","scotland"));
+
+Empty set (0.01 sec)
+
+
+9.
+mysql> select m_name as name from(select m_name,dense_rank() over(order by count(*) )as rankk from performer p join musician m on p.perf_is=m.m_no group by instrument)as temp where rankk=1;
++----------------+
+| name           |
++----------------+
+| Theo Mengel    |
+| James Quick    |
+| Louise Simpson |
+| Louise Simpson |
+| Helen Smyth    |
+| Harry Forte    |
++----------------+
+6 rows in set (0.00 sec)
+
+
+10.
+mysql> select band_name,c_title as title from band b join performance p join composition c on b.band_no =p.gave and p.performed = c.c_no where performed in( select cmpn_no from musician m join composer c join composed cc  on m.m_no=c.comp_is and c.comp_no=cc.cmpr_no  where m_name="sue little");
++---------------------+-----------------------+
+| band_name           | title                 |
++---------------------+-----------------------+
+| BBSO                | Slow Song             |
+| The left Overs      | Slow Song             |
+| Swinging strings    | Slow Song             |
+| BBSO                | Slow Symphony Blowing |
+| Somebody Loves this | Slow Symphony Blowing |
++---------------------+-----------------------+
+5 rows in set (0.00 sec)
+
+11.
+mysql> select m_name,place_town from musician m join place pp on  m.born_in =pp.place_no where place_no in (select born_in from musician where m_name ="james first") and m_name <>"james first";
++-------------+------------+
+| m_name      | place_town |
++-------------+------------+
+| Theo Mengel | London     |
+| Alan Fluff  | London     |
+| Andy Jones  | London     |
++-------------+------------+
+3 rows in set (0.00 sec)
+
+12.
+
+mysql> select temp1.m_name,instrument_count,composition_count from ((select m_name,born_in,count(*)as instrument_count from musician m 
+join performer p on m.m_no=p.perf_is group by m_no having born_in in(select place_no from place where place_country in ("scotland","england")))as temp1 
+join (select m_name,born_in,count(*)as composition_count from musician m join composer c join composed cc on m.m_no=c.comp_is and 
+c.comp_no=cc.cmpr_no group by m_no having m.born_in in(select place_no from place where place_country in ("scotland","england"))) as temp2 on temp1.m_name=temp2.m_name);
++-------------+------------------+-------------------+
+| m_name      | instrument_count | composition_count |
++-------------+------------------+-------------------+
+| James First |                1 |                 4 |
+| Harry Forte |                3 |                 2 |
++-------------+------------------+-------------------+
+2 rows in set (0.00 sec)
+
+13.
+mysql> select band_no,band_name,band_contact,conducted_by from band b join performance p on b.band_no=p.gave where performed_in in (select concert_no from concert  where concert_venue="royal albert hall" order by con_date desc);
++---------+---------------------+--------------+--------------+
+| band_no | band_name           | band_contact | conducted_by |
++---------+---------------------+--------------+--------------+
+|       6 | Somebody Loves this |            6 |           14 |
++---------+---------------------+--------------+--------------+
+1 row in set (0.00 sec)
+
+14.
+select m_name,case when born_in =(select place_no from place where place_town="glasgow") then "glasgow" else "somewhere else" end as born_in,
+  case when  living_in=(select place_no from place where place_town="glasgow") then "glasgow" else "somewhere else" end as living_in
+ ,case when c_in =(select place_no from place where place_town="glasgow") then "glasgow" else "somewhere else" end as c_in
+  from musician m join composer c join composed cc join composition ccc on m.m_no=c.comp_is and c.comp_no=cc.cmpr_no and cc.cmpn_no=ccc.c_no  
+where born_in =(select place_no from place where place_town="glasgow") or living_in in (select place_no from place where place_town="glasgow") or c_in 
+in (select place_no from place where place_town="glasgow") group by m_name;
+
++-------------+----------------+----------------+----------------+
+| m_name      | born_in        | living_in      | c_in           |
++-------------+----------------+----------------+----------------+
+| James First | somewhere else | somewhere else | glasgow        |
+| Phil Hot    | somewhere else | somewhere else | glasgow        |
+| Jeff Dawn   | somewhere else | glasgow        | glasgow        |
+| Rose Spring | somewhere else | somewhere else | glasgow        |
+| Lovely Time | glasgow        | somewhere else | somewhere else |
+| Andy Jones  | somewhere else | glasgow        | somewhere else |
++-------------+----------------+----------------+----------------+
+6 rows in set (0.03 sec)
+
+
+15.
+
+select * from ((select player,m_name from play_in p join musician m on p.player=m.m_no where band_id=(select  band_id from musician
+ m join play_in p on m.m_no= p.player where m_name="sue little")) as temp1 join (select player,m_name from play_in p join musician m
+ on p.player=m.m_no where band_id=(select  band_id from musician m join play_in p on m.m_no= p.player where m_name="jeff dawn"))as temp2
+ on temp1.m_name=temp2.m_name);
+
+Empty set (0.00 sec)

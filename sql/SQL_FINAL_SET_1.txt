@@ -9,14 +9,19 @@ p join author a on p.publish_city<>a.author_city and p.publish_city=a.author_cou
 1 row in set (0.00 sec)
 
 2.
-mysql> select p.publish_id,author_name,author_country,publish_city,publish_start_date,branches from author a join publisher p on a.publish_id=p.publish_id group by publish_start_date having p.publish_id =(select publish_id from publisher where year(publish_start_date)<2000 order by branches desc limit 1) or p.publish_id =(select publish_id from publisher where year(publish_start_date)>2000 order by branches desc limit 1);
-+------------+----------------+----------------+--------------+--------------------+----------+
-| publish_id | author_name    | author_country | publish_city | publish_start_date | branches |
-+------------+----------------+----------------+--------------+--------------------+----------+
-| PB01       | William Norton | UK             | Berlin       | 1929-04-21         |       10 |
-| PB02       | Andrew Jeff    | GERMANY        | Canada       | 2019-08-31         |       25 |
-+------------+----------------+----------------+--------------+--------------------+----------+
-2 rows in set (0.00 sec)
+mysql> select p.publish_id,author_name,author_country,publish_city,publish_start_date,branches from author a join publisher p 
+on a.publish_id =p.publish_id where p.publish_id IN ((select publish_id from publisher where year(publish_start_date)<2000 order by 
+branches desc limit 1),(select publish_id from publisher where year(publish_start_date)>2000 order by branches desc limit 1)) order by branches;
++------------+----------------------+----------------+--------------+--------------------+----------+
+| publish_id | author_name          | author_country | publish_city | publish_start_date | branches |
++------------+----------------------+----------------+--------------+--------------------+----------+
+| PB01       | Drek Tailor          | Australia      | Berlin       | 1929-04-21         |       10 |
+| PB01       | William Norton       | UK             | Berlin       | 1929-04-21         |       10 |
+| PB01       | John Betjeman Hunter | RUSSIA         | Berlin       | 1929-04-21         |       10 |
+| PB01       | S.B.Swaminathan      | INDIA          | Berlin       | 1929-04-21         |       10 |
+| PB02       | Andrew Jeff          | GERMANY        | Canada       | 2019-08-31         |       25 |
++------------+----------------------+----------------+--------------+--------------------+----------+
+5 rows in set (0.00 sec)
 
 
 3.

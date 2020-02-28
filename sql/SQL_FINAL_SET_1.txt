@@ -1,5 +1,6 @@
 1.
-mysql> select p.publish_id,p.publish_name,publish_city as correct_publish_city,publish_start_date,branches from publisher p join author a on p.publish_city<>a.author_city and p.publish_city=a.author_country;
+mysql> select p.publish_id,p.publish_name,publish_city as correct_publish_city,publish_start_date,branches from publisher 
+p join author a on p.publish_city<>a.author_city and p.publish_city=a.author_country;
 +------------+--------------------------+----------------------+--------------------+----------+
 | publish_id | publish_name             | correct_publish_city | publish_start_date | branches |
 +------------+--------------------------+----------------------+--------------------+----------+
@@ -19,7 +20,8 @@ mysql> select p.publish_id,author_name,author_country,publish_city,publish_start
 
 
 3.
-mysql> select author_id,author_name,author_country,author_city,a.publish_id,publish_name,publish_city from author a join publisher p on a.publish_id=p.publish_id where author_city=publish_city;
+mysql> select author_id,author_name,author_country,author_city,a.publish_id,publish_name,publish_city from author a 
+join publisher p on a.publish_id=p.publish_id where author_city=publish_city;
 +-----------+--------------+----------------+-------------+------------+-----------------------+--------------+
 | author_id | author_name  | author_country | author_city | publish_id | publish_name          | publish_city |
 +-----------+--------------+----------------+-------------+------------+-----------------------+--------------+
@@ -39,9 +41,8 @@ mysql> select * from author where author_country in (select author_country from 
 +-----------+----------------+----------------+---------------+------------+
 4 rows in set (0.00 sec)
 
-
-
-														or
+					      or
+					      
 mysql> select author_id,author_name,author_country,author_city,a.publish_id,publish_name,publish_city from author a join publisher p on a.publish_id=p.publish_id where author_city=publish_city
     -> union
     -> select author_id,author_name,author_country,author_city,a.publish_id,publish_name,publish_city from author a join publisher p on a.publish_id=p.publish_id where author_country in (select author_country from author a join publisher p on a.publish_id=p.publish_id where author_city=publish_city);
@@ -55,10 +56,56 @@ mysql> select author_id,author_name,author_country,author_city,a.publish_id,publ
 +-----------+----------------+----------------+---------------+------------+-----------------------+--------------+
 4 rows in set (0.01 sec)
 
+4.
+mysql> select a.author_id,a.author_name,a.author_country,a.author_city from author a join author b on a.author_city=b.author_city 
+where a.author_country<>b.author_country;
++-----------+-------------+----------------+-------------+
+| author_id | author_name | author_country | author_city |
++-----------+-------------+----------------+-------------+
+| AUT008    | Andrew Jeff | GERMANY        | Berlin      |
+| AUT007    | E. Howard   | EUROPE         | Berlin      |
++-----------+-------------+----------------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select author_id,author_name,case when author_city="berlin" then "GERMANY" else author_country end as author_country,author_city from author;
++-----------+----------------------+----------------+---------------+
+| author_id | author_name          | author_country | author_city   |
++-----------+----------------------+----------------+---------------+
+| AUT001    | William Norton       | UK             | Cambridge     |
+| AUT002    | C. J. Wilde          | USA            | San Francisco |
+| AUT003    | John Betjeman Hunter | RUSSIA         | Moscow        |
+| AUT004    | John Betjeman Hunter | CANADA         | Toronto       |
+| AUT005    | S.B.Swaminathan      | INDIA          | Delhi         |
+| AUT006    | Butler Andre         | UK             | London        |
+| AUT007    | E. Howard            | GERMANY        | Berlin        |
+| AUT008    | Andrew Jeff          | GERMANY        | Berlin        |
+| AUT009    | Drek Tailor          | Australia      | Melbourne     |
+| AUT010    | Mary Coffing         | USA            | New Jersy     |
++-----------+----------------------+----------------+---------------+
+10 rows in set (0.00 sec)
+
+5.
+mysql> select author_id,author_name,author_country,author_city from (select author_id,author_name,author_country,
+CASE WHEN publish_city="berlin" and author_country not in("germany","europe") then "true" when publish_city="new jersy" 
+and author_country<>"usa" then "true"  when publish_city="london" and author_country not in("uk","europe") then "true"  
+when author_city="canada" and publish_city<>"canada" then "true"end as publish_city,author_city, a.publish_id,publish_name 
+from author a join publisher p on a.publish_id=p.publish_id)as temp where publish_city is not null;
++-----------+----------------------+----------------+-------------+
+| author_id | author_name          | author_country | author_city |
++-----------+----------------------+----------------+-------------+
+| AUT001    | William Norton       | UK             | Cambridge   |
+| AUT003    | John Betjeman Hunter | RUSSIA         | Moscow      |
+| AUT004    | John Betjeman Hunter | CANADA         | Toronto     |
+| AUT005    | S.B.Swaminathan      | INDIA          | Delhi       |
+| AUT009    | Drek Tailor          | Australia      | Melbourne   |
++-----------+----------------------+----------------+-------------+
+5 rows in set (0.00 sec)
+
 
 
 6.
-mysql> select author_id,author_name,author_country,author_city,a.publish_id,publish_name,publish_city from author a join publisher p on a.publish_id=p.publish_id where substring(author_name,1,1)= substring(publish_name,1,1);
+mysql> select author_id,author_name,author_country,author_city,a.publish_id,publish_name,publish_city from author a 
+join publisher p on a.publish_id=p.publish_id where substring(author_name,1,1)= substring(publish_name,1,1);
 +-----------+----------------------+----------------+-------------+------------+---------------------+--------------+
 | author_id | author_name          | author_country | author_city | publish_id | publish_name        | publish_city |
 +-----------+----------------------+----------------+-------------+------------+---------------------+--------------+
